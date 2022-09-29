@@ -28,9 +28,32 @@ module.exports = (sequelize, DataTypes) => {
       },
       role: {
         type: DataTypes.ENUM('USER', 'ADMIN'),
+        allowNull: false,
+        defaultValue: 'USER',
+        validate: {
+          notEmpty: true,
+        },
       },
     },
     { underscored: true }
   );
+  User.associate = (db) => {
+    User.hasMany(db.Novel, {
+      foreignKey: {
+        name: 'userId',
+        allowNull: false,
+      },
+      onDelete: 'RESTRICT',
+    });
+
+    User.hasMany(db.Order, {
+      foreignKey: {
+        name: 'userId',
+        allowNull: false,
+      },
+      onDelete: 'RESTRICT',
+    });
+  };
+
   return User;
 };

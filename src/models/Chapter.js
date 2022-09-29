@@ -19,5 +19,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     { underscored: true }
   );
+  Chapter.associate = (db) => {
+    Chapter.hasMany(db.Order, {
+      foreignKey: {
+        name: 'chapterId',
+        allowNull: false,
+      },
+      onDelete: 'RESTRICT',
+    });
+  };
+
   return Chapter;
 };

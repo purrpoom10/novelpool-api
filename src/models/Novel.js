@@ -22,5 +22,22 @@ module.exports = (sequelize, DataTypes) => {
     },
     { underscored: true }
   );
+  Novel.associate = (db) => {
+    Novel.belongsTo(db.User, {
+      foreignKey: {
+        name: 'userId',
+        allowNull: false,
+      },
+      onDelete: 'RESTRICT',
+    });
+    Novel.hasMany(db.Novel_category, {
+      foreignKey: {
+        name: 'novelId',
+        allowNull: false,
+      },
+      onDelete: 'RESTRICT',
+    });
+  };
+
   return Novel;
 };
