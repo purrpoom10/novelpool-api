@@ -14,9 +14,6 @@ exports.register = async (req, res, next) => {
   try {
     const { userName, password, confirmPassword, email, role } = req.body;
 
-    // if (!userName) {
-    //   throw new AppError('username is require', 400);
-    // }
     if (!password) {
       throw new AppError('password is require', 400);
     }
@@ -53,6 +50,31 @@ exports.register = async (req, res, next) => {
 
     const token = genToken({ id: user.id });
     res.status(201).json({ token });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.login = async (req, res, next) => {
+  try {
+    const { userName, password } = req.body;
+    if (typeof userName !== 'string' || typeof password !== 'string') {
+      throw new AppError('username or password is invalid', 400);
+    }
+    const user = await User.findOne({ where: { userName: userName } });
+
+    if (!user) {
+      throw new AppError('username or password is invalid', 400);
+    }
+
+    const isCorrect = await bcrypt.compare(password, user.password);
+
+    if (!isCorrect) {
+      throw new AppError('username or password is invalid', 400);
+    }
+
+    const token = genToken({ id: user.id });
+    res.status(200).json({ token });
   } catch (err) {
     next(err);
   }
