@@ -17,12 +17,7 @@ exports.register = async (req, res, next) => {
     if (!password) {
       throw new AppError('password is require', 400);
     }
-    // if (password.value.match('^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$')) {
-    //   throw new AppError(
-    //     'Minimum eight characters, at least one letter and one number',
-    //     400
-    //   );
-    // }
+
     if (!confirmPassword) {
       throw new AppError('confirm password is require', 400);
     }
@@ -78,4 +73,8 @@ exports.login = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+exports.getMe = (req, res, next) => {
+  res.status(200).json({ user: req.user });
 };
